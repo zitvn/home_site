@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách các nhóm chatbot Shopee</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <style>
+        .qr-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-placeholder {
+            background: linear-gradient(135deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 200%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-12">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-3">Danh sách các nhóm chatbot Shopee</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Quét mã QR phía dưới để truy cập vào các nhóm bot báo xu của chúng tôi (quét các nhóm khác khi nhóm
+                trước bị đầy).
+            </p>
+        </header>
+
+        <!-- QR Code Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <!-- QR cards will be inserted here by JavaScript -->
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="loading" class="text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            <p class="mt-3 text-gray-600">Loading communities...</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sample community data
+            const communities = [
+                { name: "Nhóm 1", description: "Nhóm bot zalo báo xu live và xu quay shopee", link: "https://photos.google.com/share/AF1QipNisBrAGN1GKSiSWzEy2hBP6RH6jSwSKR03ZIMN0vFWPH4vpuTOip9nPw6JRh97oQ/photo/AF1QipOs904U21n0jqTmm4odeiqPnzoD2EGMpu5WR6ID?key=R0prbXpDUjg2Q1RENklnNlhtd1c4VHdpWGpQX1V3", color: "bg-blue-100" },
+                { name: "Nhóm 2", description: "Nhóm bot zalo báo xu live và xu quay shopee", link: "https://photos.google.com/share/AF1QipNisBrAGN1GKSiSWzEy2hBP6RH6jSwSKR03ZIMN0vFWPH4vpuTOip9nPw6JRh97oQ/photo/AF1QipOs904U21n0jqTmm4odeiqPnzoD2EGMpu5WR6ID?key=R0prbXpDUjg2Q1RENklnNlhtd1c4VHdpWGpQX1V3", color: "bg-purple-100" },
+                { name: "Nhóm 3", description: "Nhóm bot zalo báo xu live và xu quay shopee", link: "https://photos.google.com/share/AF1QipNisBrAGN1GKSiSWzEy2hBP6RH6jSwSKR03ZIMN0vFWPH4vpuTOip9nPw6JRh97oQ/photo/AF1QipOs904U21n0jqTmm4odeiqPnzoD2EGMpu5WR6ID?key=R0prbXpDUjg2Q1RENklnNlhtd1c4VHdpWGpQX1V3", color: "bg-green-100" },
+                // { name: "Nhóm 4", description: "Nhóm bot zalo báo xu live và xu quay shopee", link: "https://chat.whatsapp.com/travelgroup321", color: "bg-yellow-100" },
+                // { name: "Nhóm 5", description: "Nhóm bot zalo báo xu live và xu quay shopee", link: "https://chat.whatsapp.com/foodies654", color: "bg-red-100" },
+                // { name: "Nhóm 6", description: "Nhóm bot zalo báo xu live và xu quay shopee", link: "https://chat.whatsapp.com/artgroup987", color: "bg-pink-100" },
+                // { name: "Nhóm 7", description: "Nhóm bot zalo báo xu live và xu quay shopee", link: "https://chat.whatsapp.com/business123", color: "bg-indigo-100" },
+                // { name: "Nhóm 8", description: "Nhóm bot zalo báo xu live và xu quay shopee", link: "https://chat.whatsapp.com/gaming456", color: "bg-gray-100" }
+            ];
+
+            // Generate QR codes after a short delay to simulate loading
+            setTimeout(() => {
+                const grid = document.querySelector('.grid');
+                const loading = document.getElementById('loading');
+
+                loading.style.display = 'none';
+
+                communities.forEach(community => {
+                    const qr = qrcode(0, 'M');
+                    qr.addData(community.link);
+                    qr.make();
+
+                    const card = document.createElement('div');
+                    card.className = `qr-card rounded-xl overflow-hidden shadow-md transition-all duration-300 ${community.color}`;
+
+                    card.innerHTML = `
+                        <div class="p-6">
+                            <div class="flex justify-center mb-4">
+                                <div class="qr-placeholder w-40 h-40 rounded-md flex items-center justify-center" id="qr-${communities.indexOf(community)}"></div>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">${community.name}</h3>
+                            <p class="text-gray-600 mb-4">${community.description}</p>
+                            <div class="flex justify-between items-center">
+                                <a href="${community.link}" class="text-blue-600 hover:text-blue-800 text-sm font-medium" target="_blank">Join Group</a>
+                                <button onclick="downloadQR('qr-${communities.indexOf(community)}', '${community.name}')" class="text-gray-500 hover:text-gray-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    grid.appendChild(card);
+
+                });
+
+                // Render QR codes after cards are created
+                communities.forEach((community, index) => {
+                    const qr = qrcode(0, 'M');
+                    qr.addData(community.link);
+                    qr.make();
+                    document.getElementById(`qr-${index}`).innerHTML = qr.createImgTag(4);
+                });
+
+            }, 1500);
+        });
+
+        // Download QR code function
+        function downloadQR(elementId, name) {
+            const canvas = document.createElement('canvas');
+            const qrElement = document.getElementById(elementId).querySelector('img');
+
+            canvas.width = qrElement.width;
+            canvas.height = qrElement.height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(qrElement, 0, 0);
+
+            const link = document.createElement('a');
+            link.download = `${name.replace(/\s+/g, '_')}_QR.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+
+</html>
